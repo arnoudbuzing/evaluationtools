@@ -6,13 +6,22 @@ EvaluationRequest[ object_EvaluationServerObject, expr_ ] := EvaluationRequest[ 
 
 EvaluationRequest[host_,port_,expr_] := EvaluationRequest[ <| "Host" -> host, "Port" -> port, "Method" -> "POST" |>, expr ];
 
-EvaluationRequest[ assoc_Association, expr_ ] := Module[{query, url, request,response,result},
-  host = assoc["Host"];
-  port = assoc["Port"];
-  method = assoc["Method"];
+EvaluationRequest[ assoc_Association, expr_ ] := Module[{result},
+  result = Switch[ assoc["Method"],
+    "GET", requestGet[ assoc, expr],
+    "POST", requestPost[ assoc, expr]
+  ];
+  result
+]
+
+Attributes[requestGet] = {HoldAllComplete};
+requestGet[ assoc_Association, expr_ ] := Module[{},Null];
+
+Attributes[requestPost] = {HoldAllComplete};
+requestPost[ assoc_Association, expr_ ] := Module[{query,url,request,response,result},
   query = ExportString[HoldComplete[expr],"Base64"];
-  url = URLBuild[<|"Scheme" -> "http", "Domain" -> host, "Port" -> port |>];
-  request = HTTPRequest[ url, <| Method -> method, "Body" -> query |> ];
+  url = URLBuild[<|"Scheme" -> "http", "Domain" -> assoc["Host"], "Port" -> assoc["Port"] |>];
+  request = HTTPRequest[ url, <| Method -> assoc["Method"], "Body" -> query |> ];
   response = URLRead[request];
   result = ImportString[ response["Body"], "Base64"];
   result

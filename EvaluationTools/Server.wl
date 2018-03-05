@@ -31,7 +31,7 @@ socketListener[socket_SocketObject] := SocketListen[ socket,
 ];
 
 handleGet[request_HTTPRequest] := Module[{result},
-  request["Body"]
+  request["Query"]
 ]
 
 handlePost[request_HTTPRequest] := Module[{result},
