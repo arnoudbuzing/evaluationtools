@@ -1,7 +1,11 @@
+
+(* simplified syntax, using localhost and port 'e' ~ 2.7182 *)
 EvaluationServer[] := EvaluationServer["127.0.0.1","27182"]
 
+(* syntax for IPAddress wrapper *)
 EvaluationServer[host_IPAddress,port_String] := EvaluationServer[First[host],port];
 
+(* canonical syntax, using host/port *)
 EvaluationServer[host_String, port_String] := Module[{socket,listener},
   socket = SocketOpen[{host,port}];
   listener = socketListener[socket];
@@ -10,7 +14,7 @@ EvaluationServer[host_String, port_String] := Module[{socket,listener},
 
 socketListener[socket_SocketObject] := SocketListen[ socket,
   Function[{assoc},
-    Module[{source,data,request,response,line,input,expr,result,len},
+    Module[{source,data,request,response,line,input,expr,result,type},
       {source,data}=Lookup[assoc,{"SourceSocket","Data"}];
       request=ImportString[data,"HTTPRequest"];
       input = Switch[
@@ -19,23 +23,38 @@ socketListener[socket_SocketObject] := SocketListen[ socket,
         "POST",handlePost[request]
       ]; (* input will be a held expression *)
       expr=ReleaseHold[input]; (* actual evaluation takes place here *)
-      Print[expr];
-      result=ExportString[expr,"Base64"];
-      len=StringLength[result];
-      response=ExportString[HTTPResponse[result,<|"StatusCode"->200,"ContentType"->"text/plain","Headers"->{"Content-Length"->len}|>],"HTTPResponse"];
-      Print[response];
+      type = "type" /. request["Headers"];
+      response = Switch[ type,
+        "Base64",
+          result=ExportString[expr,"Base64"];
+          ExportString[HTTPResponse[result,<|"StatusCode"->200,"ContentType"->"text/plain","Headers"->{}|>],"HTTPResponse"],
+        "ByteArray",
+          result=BinarySerialize[expr];
+          ExportString[HTTPResponse[result,<|"StatusCode"->200,"ContentType"->"binary/octetstream","Headers"->{}|>],"HTTPResponse"]
+      ];
       WriteString[source,response];
       Close[source]
     ]
   ]
 ];
 
-handleGet[request_HTTPRequest] := Module[{result},
-  request["Query"]
+handleGet[request_HTTPRequest] := Module[{},
+  ToExpression[ "q" /. request["Query"] ]
 ]
 
-handlePost[request_HTTPRequest] := Module[{result},
-  ImportString[request["Body"],"Base64"]
+handlePost[request_HTTPRequest] := Module[{type},
+  Print[request];
+  type = "type" /. request["Headers"];
+  Print["type: ",type];
+  Switch[ type,
+    "Base64",
+      Print["Base64"];
+      ImportString[request["Body"],"Base64"],
+    "ByteArray",
+      Print["ByteArray"];
+      Print[BinaryDeserialize[request["BodyByteArray"]]];
+      BinaryDeserialize[request["BodyByteArray"]]
+  ]
 ]
 
 
