@@ -47,7 +47,7 @@ requestPost[ assoc_Association, expr_ ] := Module[{query,url,request,response,re
       ctype = "ByteArray";
       query = BinarySerialize[HoldComplete[expr]];
       url = URLBuild[<|"Scheme" -> "http", "Domain" -> assoc["Host"], "Port" -> assoc["Port"] |>];
-      request = HTTPRequest[ url, <| Method -> "POST", "Body" -> query, "ContentType" -> "binary/octetstream", "Headers" -> { "type" -> ctype } |> ];
+      request = HTTPRequest[ url, <| Method -> "POST", "Body" -> query, "ContentType" -> "binary/octetstream", "Headers" -> { "Content-Length" -> Length[query], "type" -> ctype } |> ];
       response = URLRead[request];
       result = BinaryDeserialize[ response["BodyByteArray"] ]
   ];
