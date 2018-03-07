@@ -3,7 +3,7 @@ Paclet[
   Description -> "EvaluationTools for evaluating Wolfram Language expressions",
   Creator -> "Arnoud Buzing",
   Publisher -> "Wolfram Research",
-  Version -> "0.0.2",
+  Version -> "0.0.3",
   MathematicaVersion -> "11.2+",
   Loading -> Automatic,
   Extensions -> {

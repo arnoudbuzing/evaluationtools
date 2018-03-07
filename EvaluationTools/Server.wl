@@ -42,9 +42,10 @@ handleGet[request_HTTPRequest] := Module[{},
   ToExpression[ "q" /. request["Query"] ]
 ]
 
-handlePost[request_HTTPRequest] := Module[{type},
+handlePost[request_HTTPRequest] := Module[{type,length},
   Print[request];
   type = "type" /. request["Headers"];
+  length = ToExpression[ "Content-Length" /. request["Headers"] ];
   Print["type: ",type];
   Switch[ type,
     "Base64",
@@ -52,7 +53,7 @@ handlePost[request_HTTPRequest] := Module[{type},
       ImportString[request["Body"],"Base64"],
     "ByteArray",
       Print["ByteArray"];
-      Print[BinaryDeserialize[request["BodyByteArray"]]];
+      Print[BinaryDeserialize[Take[request["BodyByteArray"],length]]];
       BinaryDeserialize[request["BodyByteArray"]]
   ]
 ]
