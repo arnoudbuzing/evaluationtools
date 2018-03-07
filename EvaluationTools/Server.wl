@@ -43,16 +43,12 @@ handleGet[request_HTTPRequest] := Module[{},
 ]
 
 handlePost[request_HTTPRequest] := Module[{type,length},
-  Print[request];
   type = "type" /. request["Headers"];
   length = ToExpression[ "content-length" /. request["Headers"] ];
-  Print["type: ",type];
   Switch[ type,
     "Base64",
-      Print["Base64"];
       ImportString[request["Body"],"Base64"],
     "ByteArray",
-      Print["ByteArray"];
       $Failed
   ]
 ]

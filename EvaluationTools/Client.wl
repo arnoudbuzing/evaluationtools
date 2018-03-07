@@ -36,7 +36,6 @@ Attributes[requestPost] = {HoldAllComplete};
 requestPost[ assoc_Association, expr_ ] := Module[{query,url,request,response,result,ctype},
   Switch[ assoc["Encoding"],
     "Base64",
-      Print["Base64"];
       ctype = "Base64";
       query = ExportString[HoldComplete[expr],"Base64"];
       url = URLBuild[<|"Scheme" -> "http", "Domain" -> assoc["Host"], "Port" -> assoc["Port"] |>];
