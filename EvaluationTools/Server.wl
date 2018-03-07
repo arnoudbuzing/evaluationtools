@@ -26,7 +26,7 @@ socketListener[socket_SocketObject] := SocketListen[ socket,
       type = "type" /. request["Headers"];
       response = Switch[ type,
         "Base64",
-          result=ExportString[expr,"Base64"];
+          result=ExportString[FullForm[expr],"Base64"];
           ExportString[HTTPResponse[result,<|"StatusCode"->200,"ContentType"->"text/plain","Headers"->{}|>],"HTTPResponse"],
         "ByteArray",
           result=BinarySerialize[expr];
@@ -53,8 +53,7 @@ handlePost[request_HTTPRequest] := Module[{type,length},
       ImportString[request["Body"],"Base64"],
     "ByteArray",
       Print["ByteArray"];
-      Print[BinaryDeserialize[Take[request["BodyByteArray"],length]]];
-      BinaryDeserialize[request["BodyByteArray"]]
+      $Failed
   ]
 ]
 
