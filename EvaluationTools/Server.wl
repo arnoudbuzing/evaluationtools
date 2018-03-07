@@ -45,7 +45,7 @@ handleGet[request_HTTPRequest] := Module[{},
 handlePost[request_HTTPRequest] := Module[{type,length},
   Print[request];
   type = "type" /. request["Headers"];
-  length = ToExpression[ "Content-Length" /. request["Headers"] ];
+  length = ToExpression[ "content-length" /. request["Headers"] ];
   Print["type: ",type];
   Switch[ type,
     "Base64",
