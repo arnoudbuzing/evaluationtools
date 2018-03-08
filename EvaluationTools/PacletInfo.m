@@ -8,6 +8,8 @@ Paclet[
   Loading -> Automatic,
   Extensions -> {
    { "Documentation", Language -> "English"},
-   { "Kernel", Symbols -> {"EvaluationTools`EvaluationServer","EvaluationTools`EvaluationRequest","EvaluationTools`EvaluationServerObject"}, Context -> {"EvaluationTools`"} }
+   { "Kernel", Symbols -> {"EvaluationTools`EvaluationServer","EvaluationTools`EvaluationRequest",
+   "EvaluationTools`EvaluationServerObject","EvaluationTools`SocketServer", "EvaluationTools`SocketClient",
+   "EvaluationTools`SocketRequest"}, Context -> {"EvaluationTools`"} }
   }
 ]
