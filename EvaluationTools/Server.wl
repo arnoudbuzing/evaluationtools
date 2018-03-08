@@ -1,4 +1,3 @@
-
 (* simplified syntax, using localhost and port 'e' ~ 2.7182 *)
 EvaluationServer[] := EvaluationServer["127.0.0.1","27182"]
 
