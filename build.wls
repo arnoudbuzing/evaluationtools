@@ -1,3 +1,4 @@
+#!/usr/bin/wolframscript
 Print[];
 directory = DirectoryName[$InputFileName];
 Print["Using directory: ", directory];
