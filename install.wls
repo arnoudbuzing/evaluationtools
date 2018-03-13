@@ -1,3 +1,4 @@
+#!/usr/bin/wolframscript
 Print[];
 
 (* uninstall old paclets first *)
